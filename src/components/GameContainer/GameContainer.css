@@ -1,0 +1,53 @@
+@media (min-aspect-ratio: 7/5) {
+  /* fix for very wide screens */
+  .fixed-width {
+    width: 126vh;
+  }
+}
+
+@media (max-aspect-ratio: 7/5) {
+  /* expand proportionally for wide screens */
+  .fixed-width {
+    width: 90vw;
+  }
+}
+
+@media (max-aspect-ratio: 1/1) {
+  /* Fix for narrowing screens */
+  .fixed-width {
+    width: 90vh;
+  }
+}
+
+@media (max-aspect-ratio: 9/10) {
+  /* Shrink proportionally if screen narrower than a 10:9 height to width */
+  .fixed-width {
+    width: 100vw;
+  }
+}
+
+.Game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  background-color: #20975a;
+}
+
+.dividing-row {
+  width: 100%;
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dividing-bar {
+  height: 4vh;
+  width: 100%;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-left: 4%;
+  margin-right: 4%;
+  background-color: #a0e020;
+}

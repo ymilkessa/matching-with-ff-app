@@ -1,0 +1,9 @@
+.Number-box {
+  background-color: blue;
+  color: white;
+  font-size: calc(10px + 2vmin);
+  padding: 1vmin;
+  margin: 1vmin;
+  max-width: 6vmax;
+  max-height: 6vmax;
+}
