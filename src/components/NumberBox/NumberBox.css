@@ -1,9 +1,35 @@
 .Number-box {
-  background-color: blue;
   color: white;
   font-size: calc(10px + 2vmin);
   padding: 1vmin;
   margin: 1vmin;
   max-width: 6vmax;
   max-height: 6vmax;
+}
+
+.number-box-neutral {
+  border: solid whitesmoke 0.2vmin;
+}
+
+.number-box-passing {
+  border: solid whitesmoke 0.4vmin;
+  font-size: calc(10px + 2.2vmin);
+  max-width: 7vmax;
+  width: 7vmax;
+  max-height: 7vmax;
+  height: 7vmax;
+}
+
+.number-box-temp-error {
+  background-color: lightcoral;
+}
+
+/* #3fa796 that green color */
+.number-box-selected {
+  /* background-color: #feda90; */
+  background-color: #cef95a;
+}
+
+.number-box-matched {
+  background-color: #6d67e4;
 }
