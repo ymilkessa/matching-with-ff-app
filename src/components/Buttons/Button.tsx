@@ -1,22 +1,20 @@
 import { MouseEventHandler } from "react";
+import "./Button.css";
 
 interface ButtonArgs {
   text: string;
-  action: Object;
+  action: MouseEventHandler<HTMLDivElement>;
   classNames: string[];
 }
 
 const Button = ({ text, action, classNames }: ButtonArgs) => {
-  const classNamesList = ["button", ...classNames];
+  const classNamesList = ["common-properties", ...classNames];
   let classNamesString = "";
   for (let k = 0; k < classNamesList.length; k++) {
     classNamesString += `${classNamesList[k]} `;
   }
   return (
-    <div
-      className={classNamesString}
-      onClick={action as MouseEventHandler<HTMLDivElement>}
-    >
+    <div className={classNamesString} onClick={action}>
       {text}
     </div>
   );
