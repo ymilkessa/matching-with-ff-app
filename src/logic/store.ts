@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import arrayReducer from "./arraySlice";
+import arrayReducer from "./gameLogic/arraySlice";
+import gameSizeReducer from "./gameSettings/sizeSlice";
 
 export const store = configureStore({
   reducer: {
     sets: arrayReducer,
+    gameSettings: gameSizeReducer,
   },
 });
 
