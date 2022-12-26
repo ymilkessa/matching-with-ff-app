@@ -3,15 +3,8 @@ import "./NumberRow.css";
 import { RootState } from "../../logic/store";
 import { useSelector } from "react-redux";
 import "./NumberRow.css";
-
-enum RowNum {
-  setA = 0,
-  setB = 1,
-}
-
-export interface NumberRowArgs {
-  row: RowNum;
-}
+import { NumberBoxArgs } from "../NumberBox/types";
+import { NumberRowArgs, RowNum } from "./types";
 
 const NumberRow = ({ row }: NumberRowArgs) => {
   const { setA, setB } = useSelector((state: RootState) => state.sets);
@@ -20,17 +13,29 @@ const NumberRow = ({ row }: NumberRowArgs) => {
   );
   const numbers = row === RowNum.setA ? setA : setB;
   const setSize = row === RowNum.setA ? setASize : setBSize;
-  const startIndex = row === RowNum.setA ? 0 : setA.length;
   const numbersToDisplay = numbers.slice(0, setSize);
-  const numberBoxes = numbersToDisplay.map((num, _index) => (
+
+  // Get the selection and cursor markers.
+  const { selection, cursor } = useSelector(
+    (state: RootState) => state.selectionAndCursor
+  );
+  const numberParams: NumberBoxArgs[] = numbersToDisplay.map((num, index) => {
+    return { num, row, index };
+  });
+  // Add the cursor marker to the right NumberBox if in this set
+  if (cursor.row === row && cursor.index < numberParams.length) {
+    numberParams[cursor.index].boxTags = ["number-box-passing"];
+  }
+  // Also add the selection marker if it is in this set
+  if (selection.row === row && selection.index < numberParams.length) {
+    numberParams[selection.index].boxTags = ["number-box-selected"];
+  }
+
+  const numberBoxes = numberParams.map((params, index) => (
     // The 'key' element is simply to satisfy a react requirement
-    <NumberBox
-      num={num}
-      row={row}
-      index={startIndex + _index}
-      key={startIndex + _index}
-    />
+    <NumberBox key={index} {...params} />
   ));
+
   return <div className="row Number-row">{numberBoxes}</div>;
 };
 

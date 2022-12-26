@@ -12,12 +12,11 @@
 }
 
 .number-box-passing {
-  border: solid whitesmoke 0.4vmin;
-  font-size: calc(10px + 2vmin);
-  min-width: 7vmax;
-  width: 7vmax;
-  min-height: 7vmax;
-  height: 7vmax;
+  border: solid whitesmoke 0.3vmax;
+  font-size: calc(10px + 2.1vmin);
+  font-weight: bold;
+  min-width: 6.5vmax;
+  min-height: 6.5vmax;
 }
 
 .number-box-temp-error {
@@ -28,6 +27,7 @@
 .number-box-selected {
   /* background-color: #feda90; */
   background-color: #cef95a;
+  color: black;
 }
 
 .number-box-matched {

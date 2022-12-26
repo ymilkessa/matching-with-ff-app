@@ -18,9 +18,8 @@ export const arraySlice = createSlice({
   reducers: {
     generateSets: (state, action) => {
       // Fetch the game params from the payload
-      const gameParams = action?.payload as GameSize;
-      const { setASize, setBSize } = gameParams;
-      // Use setB since it is always the largest value in the sets
+      const { setASize, setBSize } = action?.payload as GameSize;
+      // Use the largest size to create sets
       const { list1, list2 } = generateShuffledCoprimePairs(
         max([setASize, setBSize])
       );

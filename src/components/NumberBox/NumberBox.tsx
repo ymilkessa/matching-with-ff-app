@@ -1,19 +1,24 @@
+import { useDispatch } from "react-redux";
 import "./NumberBox.css";
+import { moveSelectionTo } from "../../logic/selectionTracker/selectionSlice";
+import { NumberBoxArgs } from "./types";
 
-export interface NumberBoxArgs {
-  num: number;
-  row: number;
-  index: number;
-}
-
-const NumberBox = ({ num, row, index }: NumberBoxArgs) => {
+const NumberBox = ({
+  num,
+  row,
+  index,
+  boxTags = ["number-box-neutral"],
+}: NumberBoxArgs) => {
+  const dispatch = useDispatch();
   const onClickFunc = () => {
-    console.log(
-      `This is number ${num}. It has index ${index} and is on row ${row}`
-    );
+    dispatch(moveSelectionTo({ row, index }));
   };
+  let classes = "Number-box ";
+  for (let k = 0; k < boxTags.length; k++) {
+    classes += `${boxTags[k]} `;
+  }
   return (
-    <div className="Number-box number-box-neutral" onClick={onClickFunc}>
+    <div className={classes} onClick={onClickFunc}>
       {num}
     </div>
   );

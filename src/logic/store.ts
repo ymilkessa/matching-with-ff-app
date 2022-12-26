@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import arrayReducer from "./gameLogic/arraySlice";
+import arrayReducer from "./numberSets/arraySlice";
 import gameSizeReducer from "./gameSettings/sizeSlice";
+import selectionReducer from "./selectionTracker/selectionSlice";
 
 export const store = configureStore({
   reducer: {
     sets: arrayReducer,
     gameSettings: gameSizeReducer,
+    selectionAndCursor: selectionReducer,
   },
 });
 

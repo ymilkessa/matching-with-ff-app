@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Buttons/Button";
-import { generateSets } from "../../logic/gameLogic/arraySlice";
+import { generateSets } from "../../logic/numberSets/arraySlice";
 import { RootState } from "../../logic/store";
 import {
   GameSize,
@@ -75,8 +75,8 @@ const Controls = () => {
   };
 
   return (
-    <div className="row Control-box">
-      <div className="col-sm-3 left-button">
+    <div className="Control-box">
+      <div className="left-button">
         <div>
           <Button
             text="New Game"
@@ -86,7 +86,7 @@ const Controls = () => {
         </div>
       </div>
 
-      <div className="right-side-buttons col-sm-4">
+      <div className="right-side-buttons">
         <div className="right-side-button-class">
           <div>
             Ratio: {gameSettings.setASize}/{gameSettings.setBSize}
