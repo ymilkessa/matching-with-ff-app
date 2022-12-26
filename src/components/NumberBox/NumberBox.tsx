@@ -13,10 +13,7 @@ const NumberBox = ({ num, row, index }: NumberBoxArgs) => {
     );
   };
   return (
-    <div
-      className="col-xs-1 Number-box number-box-neutral"
-      onClick={onClickFunc}
-    >
+    <div className="Number-box number-box-neutral" onClick={onClickFunc}>
       {num}
     </div>
   );

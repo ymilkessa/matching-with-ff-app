@@ -1,5 +1,9 @@
 .Number-row {
   min-width: 70%;
-  display: flex;
-  justify-content: space-evenly;
+  max-width: 100%;
+
+  /* The lines below should work because the div 
+  is also a bootstrap grid row*/
+  justify-content: center;
+  align-items: center;
 }

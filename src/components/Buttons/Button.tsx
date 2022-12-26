@@ -7,7 +7,7 @@ interface ButtonArgs {
   classNames: string[];
 }
 
-const Button = ({ text, action, classNames }: ButtonArgs) => {
+const Button = ({ text, action, classNames = ["default"] }: ButtonArgs) => {
   const classNamesList = ["common-properties", ...classNames];
   let classNamesString = "";
   for (let k = 0; k < classNamesList.length; k++) {

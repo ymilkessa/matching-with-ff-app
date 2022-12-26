@@ -1,4 +1,31 @@
 .Control-box {
-  display: flex;
-  justify-content: space-evenly;
+  font-size: calc(10px + 1vmin);
+  width: 100%;
+  /* If this is a bootstrap row */
+  justify-content: space-between;
 }
+
+.left-button {
+  display: flex;
+  justify-content: center;
+}
+
+.right-side-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: rgb(53, 79, 145);
+  border-radius: 1.5vmax;
+}
+
+.right-side-button-class {
+  /* For internal content ... */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* .change-ratio-button {
+  max-width: 70%;
+  width: 6vmax;
+} */
