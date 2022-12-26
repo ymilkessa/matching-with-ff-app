@@ -10,15 +10,15 @@ const GameContainer = () => {
   const gameSettings = useSelector((state: RootState) => state.gameSettings);
   const dispatch = useDispatch();
   dispatch(generateSets(gameSettings));
-  const { setA, setB } = useSelector((state: RootState) => state.sets);
+  // const { setA, setB } = useSelector((state: RootState) => state.sets);
   return (
     <div className="container-fluid Game-container fixed-width">
       <Controls />
-      <NumberRow numbers={setA} row={0} startIndex={0} />
+      <NumberRow row={0} />
       <div className="dividing-row">
         <div className="dividing-bar" />
       </div>
-      <NumberRow numbers={setB} row={1} startIndex={setA.length} />
+      <NumberRow row={1} />
     </div>
   );
 };

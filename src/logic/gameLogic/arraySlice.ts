@@ -5,6 +5,7 @@ import { GameSize } from "../gameSettings/sizeSlice";
 export interface ArraySlice {
   setA: number[];
   setB: number[];
+  // setASize?: number;
 }
 
 const { list1, list2 } = generateShuffledCoprimePairs();
