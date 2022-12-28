@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { generateShuffledCoprimePairs } from "../utils";
-import { GameSize } from "../gameSettings/sizeSlice";
+import { GameSize } from "./gameSizeSlice";
 import { max } from "lodash";
 
 export interface ArraySlice {

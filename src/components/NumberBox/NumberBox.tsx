@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import "./NumberBox.css";
-import { moveSelectionTo } from "../../logic/selectionTracker/selectionSlice";
+import { setNewVirtualSelection } from "../../logic/stateUpdaters/selectionSlice";
 import { NumberBoxArgs } from "./types";
 
 const NumberBox = ({
@@ -11,7 +11,7 @@ const NumberBox = ({
 }: NumberBoxArgs) => {
   const dispatch = useDispatch();
   const onClickFunc = () => {
-    dispatch(moveSelectionTo({ row, index }));
+    dispatch(setNewVirtualSelection({ row, index }));
   };
   let classes = "Number-box ";
   for (let k = 0; k < boxTags.length; k++) {

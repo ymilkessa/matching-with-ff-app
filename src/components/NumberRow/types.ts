@@ -1,8 +1,5 @@
-export enum RowNum {
-  setA = 0,
-  setB = 1,
-}
+import { SET_NUMBERS } from "../../logic/constants";
 
 export interface NumberRowArgs {
-  row: RowNum;
+  row: SET_NUMBERS;
 }

@@ -1,13 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import arrayReducer from "./numberSets/arraySlice";
-import gameSizeReducer from "./gameSettings/sizeSlice";
-import selectionReducer from "./selectionTracker/selectionSlice";
+import arrayReducer from "./stateUpdaters/arraySlice";
+import gameSizeReducer from "./stateUpdaters/gameSizeSlice";
+import markingsReducer from "./stateUpdaters/markingsSlice";
+import matchingsReducer from "./stateUpdaters/matchingsSlice";
+import selectionReducer from "./stateUpdaters/selectionSlice";
 
 export const store = configureStore({
   reducer: {
     sets: arrayReducer,
     gameSettings: gameSizeReducer,
-    selectionAndCursor: selectionReducer,
+    markings: markingsReducer,
+    matchings: matchingsReducer,
+    virtualSelection: selectionReducer,
   },
 });
 

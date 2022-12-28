@@ -4,6 +4,7 @@ import NumberRow from "../NumberRow/NumberRow";
 import "./GameContainer.css";
 // import { RootState } from "../../logic/store";
 import Controls from "../Controls/Controls";
+import StatusBoard from "../StatusBoard/StatusBoard";
 // import { generateSets } from "../../logic/gameLogic/arraySlice";
 
 const GameContainer = () => {
@@ -14,6 +15,7 @@ const GameContainer = () => {
   return (
     <div className="container-fluid Game-container fixed-width">
       <Controls />
+      <StatusBoard />
       <NumberRow row={0} />
       <div className="dividing-row">
         <div className="dividing-bar" />

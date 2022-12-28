@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Buttons/Button";
-import { generateSets } from "../../logic/numberSets/arraySlice";
+import { generateSets } from "../../logic/stateUpdaters/arraySlice";
 import { RootState } from "../../logic/store";
 import {
   GameSize,
   changeNumberOfPairs,
-} from "../../logic/gameSettings/sizeSlice";
+} from "../../logic/stateUpdaters/gameSizeSlice";
 import "./Controls.css";
 
 enum setChangeMarkers {

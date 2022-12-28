@@ -1,0 +1,11 @@
+.Status-board {
+  width: 100%;
+}
+
+.inner-status-board {
+  background-color: rgb(34, 104, 139);
+  border-radius: 1.8vmax;
+  width: 95%;
+  margin: auto;
+  float: center;
+}
