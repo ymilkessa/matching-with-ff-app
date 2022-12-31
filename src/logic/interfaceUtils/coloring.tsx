@@ -25,7 +25,7 @@ export class Coloring {
 
   /**
    * selectColoring returns a hex representation of an RGB color from among the colors
-   * availabe in this object based on the the index provided
+   * availabe in this object based on the the 0-based index provided
    */
   public selectColoring(colorIndex: number): string {
     if (colorIndex >= 0 && colorIndex < this.numOfOptions) {
@@ -39,7 +39,7 @@ export class Coloring {
       for (let k = 0; k < 3; k++) {
         finalString += hexStrings[k];
       }
-      return finalString;
+      return "#" + finalString;
     }
 
     // Return an error if the input is invalid

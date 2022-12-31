@@ -8,11 +8,14 @@ import {
 } from "../../logic/stateUpdaters/markingsSlice";
 import {
   UNMATCHED_MARKER,
-  addMatchingFromObjects,
+  addMatching,
   unmatchBox,
 } from "../../logic/stateUpdaters/matchingsSlice";
 import { SET_NUMBERS } from "../../logic/constants";
 import { numbersAreCoprime } from "../../logic/utils";
+import { min } from "lodash";
+import { generateSets } from "../../logic/stateUpdaters/arraySlice";
+import { GameSize } from "../../logic/stateUpdaters/gameSizeSlice";
 
 const StatusBoard = () => {
   const dispatch = useDispatch();
@@ -21,47 +24,73 @@ const StatusBoard = () => {
   const { previousSelection, selection } = useSelector(
     (state: RootState) => state.virtualSelection
   );
-  const { setAMatches, setBMatches } = useSelector(
+  const { setAMatches, setBMatches, arrayOfMatches } = useSelector(
     (state: RootState) => state.matchings
   );
-
-  // First move the cursor to where the current selction is
-  selection && dispatch(moveCursorMarker(selection));
+  const { setASize, setBSize } = useSelector(
+    (state: RootState) => state.gameSettings
+  );
 
   // Get the match value for this box
   const relevantMatches =
     selection &&
     (selection.row === SET_NUMBERS.SET_A ? setAMatches : setBMatches);
   const matchFromOtherSet = selection && relevantMatches?.[selection.index];
+  const areYouHereAfterAddingAMatch =
+    previousSelection && previousSelection.index === matchFromOtherSet;
+
+  // First move the cursor to where the current selction is
+  selection && dispatch(moveCursorMarker(selection));
 
   if (selection === null) {
-    return;
+    // (0) Nothing to do here. Just re-render.
+  } else if (areYouHereAfterAddingAMatch) {
+    // (1) Nothing to do here as well. Just re-render.
   } else if (previousSelection === null) {
-    // (1) If this is an initiol selection...
+    // (2) If this is an initiol selection...
     dispatch(addSelectionMarker(selection));
   } else if (matchFromOtherSet && matchFromOtherSet !== UNMATCHED_MARKER) {
-    // (2) If this is an unmatch operation...
+    // (3) If this is an unmatch operation...
     dispatch(unmatchBox(selection));
     dispatch(addSelectionMarker(selection));
-    return;
   } else if (previousSelection.row !== selection.row) {
-    // (3) If this selection is from a new row/set, this is a potential match
-    const firstNumber =
+    // (4) If this selection is from a new row/set, this is a potential match
+    const previousNum =
       setsInOrder[previousSelection.row][previousSelection.index];
-    const secondNumber = setsInOrder[selection.row][selection.index];
-    if (numbersAreCoprime(firstNumber, secondNumber)) {
-      dispatch(addMatchingFromObjects([previousSelection, selection]));
+    const currentNum = setsInOrder[selection.row][selection.index];
+    if (numbersAreCoprime(previousNum, currentNum)) {
+      // If this is the last match, just reset the game.
+      if (arrayOfMatches.length + 1 === min([setASize, setBSize])) {
+        // Reset the game.
+        dispatch(generateSets({ setASize, setBSize } as GameSize));
+      } else {
+        dispatch(
+          addMatching({
+            matching: [previousSelection, selection],
+            setASize: setA.length,
+            setBSize: setB.length,
+          })
+        );
+      }
     } else {
       dispatch(addErrorMarksFromObjects([previousSelection, selection]));
+      setTimeout(() => dispatch(addSelectionMarker(selection)), 1000);
     }
+  } else {
+    // (5) This is just a new selection within the same set.
+    dispatch(addSelectionMarker(selection));
   }
 
   return (
     <div className="Status-board">
       <div className="inner-status-board">
-        <div className="current-selection">
-          Current Selection: Index {selection.index}, row {selection.row}
-        </div>
+        {selection ? (
+          <div className="current-selection">
+            Current Selection: Index {selection.index}, row {selection.row}
+          </div>
+        ) : (
+          ""
+        )}
         {previousSelection ? (
           <div className="previous-selection">
             Last selection: Index {previousSelection.index}, row{" "}

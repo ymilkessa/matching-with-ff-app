@@ -7,18 +7,24 @@ const NumberBox = ({
   num,
   row,
   index,
-  boxTags = ["number-box-neutral"],
+  boxTags = [],
+  matchColor = undefined,
 }: NumberBoxArgs) => {
   const dispatch = useDispatch();
   const onClickFunc = () => {
     dispatch(setNewVirtualSelection({ row, index }));
   };
+  if (!boxTags.length) boxTags.push("number-box-neutral");
   let classes = "Number-box ";
   for (let k = 0; k < boxTags.length; k++) {
     classes += `${boxTags[k]} `;
   }
   return (
-    <div className={classes} onClick={onClickFunc}>
+    <div
+      className={classes}
+      style={matchColor ? { backgroundColor: matchColor } : undefined}
+      onClick={onClickFunc}
+    >
       {num}
     </div>
   );

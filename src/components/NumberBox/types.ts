@@ -6,4 +6,5 @@ export interface BoxLocation {
 export interface NumberBoxArgs extends BoxLocation {
   num: number;
   boxTags?: string[];
+  matchColor?: string;
 }

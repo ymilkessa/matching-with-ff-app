@@ -38,10 +38,6 @@ const markingSlice = createSlice({
         throw Error(`Found an error when removing error marks:\n${e}`);
       }
     },
-    /**
-     * Sets both the selectionBox and the cursorBox attributes to point
-     * to the same box
-     */
     addSelectionMarker: (state, action) => {
       try {
         state.selectedBox = action.payload as BoxLocation;

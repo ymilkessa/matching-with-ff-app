@@ -41,17 +41,24 @@ export const matchingsSlice = createSlice({
         );
         state.arrayOfMatches = [];
       }
-      const [itemA, itemB] = matching;
-      state.setAMatches[itemA.index] = itemB.index;
-      state.setBMatches[itemB.index] = itemA.index;
-      state.arrayOfMatches.push([itemA.index, itemB.index]);
-    },
-    addMatchingFromObjects: (state, action) => {
-      const [setAObj, setBObj] = action.payload as MatchingObjects;
-      const matchingArray = [-1, -1];
-      matchingArray[setAObj.row] = setAObj.index;
-      matchingArray[setBObj.row] = setBObj.index;
-      addMatching(matchingArray);
+      console.log(`YOFTI-LOGS: state before:\n${JSON.stringify(state)}`);
+      let [itemA, itemB] = matching;
+      // Flip the items if they appear in reverse...
+      if (itemA.row) {
+        [itemB, itemA] = [itemA, itemB];
+      }
+      const newSetAMatches = [...state.setAMatches];
+      newSetAMatches[itemA.index] = itemB.index;
+      state.setAMatches = [...newSetAMatches];
+      const newSetBMatches = [...state.setBMatches];
+      newSetBMatches[itemB.index] = itemA.index;
+      state.setBMatches = [...newSetBMatches];
+      // state.setAMatches[itemA.index] = itemB.index;
+      // state.setBMatches[itemB.index] = itemA.index;
+      const newArrayOfMatches = [...state.arrayOfMatches];
+      newArrayOfMatches.push([itemA.index, itemB.index]);
+      state.arrayOfMatches = [...newArrayOfMatches];
+      console.log(`YOFTI-LOGS: state after:\n${JSON.stringify(state)}`);
     },
     removeMatching: (state, action) => {
       if (state.setAMatches && state.setBMatches) {
@@ -90,10 +97,6 @@ export const matchingsSlice = createSlice({
   },
 });
 
-export const {
-  addMatching,
-  addMatchingFromObjects,
-  removeMatching,
-  unmatchBox,
-} = matchingsSlice.actions;
+export const { addMatching, removeMatching, unmatchBox } =
+  matchingsSlice.actions;
 export default matchingsSlice.reducer;
