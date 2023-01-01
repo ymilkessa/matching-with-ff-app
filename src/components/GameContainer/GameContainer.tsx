@@ -27,11 +27,3 @@ const GameContainer = () => {
 };
 
 export default GameContainer;
-
-/**
- * react-dom.development.js:86 Warning: Cannot update a component (`Controls`) while rendering a different component (`GameContainer`). 
- * To locate the bad setState() call inside `GameContainer`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render
-    at GameContainer (http://localhost:3000/static/js/bundle.js:331:80)
-    at div
-    at App
- */
