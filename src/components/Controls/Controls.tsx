@@ -8,21 +8,28 @@ import {
 } from "../../logic/stateUpdaters/gameSizeSlice";
 import "./Controls.css";
 
-enum setChangeMarkers {
+export enum SET_CHANGE_MARKERS {
   IncreaseMarker = "+",
   DecreaseMarker = "-",
 }
 
+export enum CONTROLS_TEST_IDS {
+  IncreaseRatio = "inc-ratio",
+  DecreaseRatio = "dec-ratio",
+  IncreaseSetSize = "inc-set-size",
+  DecreaseSetSize = "dec-set-size",
+}
+
 const changeSizeOfSetA = (
-  updateType: setChangeMarkers,
+  updateType: SET_CHANGE_MARKERS,
   currentSettings: GameSize
 ): GameSize | undefined => {
   const newSettings = { ...currentSettings };
-  if (updateType === setChangeMarkers.IncreaseMarker) {
+  if (updateType === SET_CHANGE_MARKERS.IncreaseMarker) {
     if (currentSettings.setASize < currentSettings.setBSize) {
       newSettings.setASize += 1;
     }
-  } else if (updateType === setChangeMarkers.DecreaseMarker) {
+  } else if (updateType === SET_CHANGE_MARKERS.DecreaseMarker) {
     if (currentSettings.setASize > 1) {
       newSettings.setASize -= 1;
     }
@@ -34,15 +41,15 @@ const changeSizeOfSetA = (
 };
 
 const changeOverallSize = (
-  updateType: setChangeMarkers,
+  updateType: SET_CHANGE_MARKERS,
   currentSettings: GameSize
 ): GameSize | undefined => {
   const newSettings = { ...currentSettings };
-  if (updateType === setChangeMarkers.IncreaseMarker) {
+  if (updateType === SET_CHANGE_MARKERS.IncreaseMarker) {
     // Updating setASize first to avoid error from delayed changes
     newSettings.setASize = newSettings.setBSize + 1;
     newSettings.setBSize += 1;
-  } else if (updateType === setChangeMarkers.DecreaseMarker) {
+  } else if (updateType === SET_CHANGE_MARKERS.DecreaseMarker) {
     if (currentSettings.setBSize > 2) {
       newSettings.setASize = newSettings.setBSize - 1;
       newSettings.setBSize -= 1;
@@ -58,14 +65,14 @@ const Controls = () => {
   const dispatch = useDispatch();
   let gameSettings = useSelector((state: RootState) => state.gameSettings);
 
-  const updateNumberOfPairs = (updateType: setChangeMarkers) => {
+  const updateNumberOfPairs = (updateType: SET_CHANGE_MARKERS) => {
     const newSettings = changeSizeOfSetA(updateType, gameSettings);
     if (newSettings) {
       return dispatch(changeNumberOfPairs(newSettings));
     }
   };
 
-  const updateOverallSetSize = (updateType: setChangeMarkers) => {
+  const updateOverallSetSize = (updateType: SET_CHANGE_MARKERS) => {
     const newSettings = changeOverallSize(updateType, gameSettings);
     if (newSettings) {
       dispatch(changeNumberOfPairs(newSettings));
@@ -93,20 +100,26 @@ const Controls = () => {
           </div>
           <div>
             <Button
-              text={setChangeMarkers.IncreaseMarker}
+              text={SET_CHANGE_MARKERS.IncreaseMarker}
               action={() =>
-                updateNumberOfPairs(setChangeMarkers.IncreaseMarker)
+                updateNumberOfPairs(SET_CHANGE_MARKERS.IncreaseMarker)
               }
               classNames={["default"]}
+              otherAttributes={{
+                "data-testid": CONTROLS_TEST_IDS.IncreaseRatio,
+              }}
             />
           </div>
           <div>
             <Button
-              text={setChangeMarkers.DecreaseMarker}
+              text={SET_CHANGE_MARKERS.DecreaseMarker}
               action={() =>
-                updateNumberOfPairs(setChangeMarkers.DecreaseMarker)
+                updateNumberOfPairs(SET_CHANGE_MARKERS.DecreaseMarker)
               }
               classNames={["default"]}
+              otherAttributes={{
+                "data-testid": CONTROLS_TEST_IDS.DecreaseRatio,
+              }}
             />
           </div>
         </div>
@@ -114,20 +127,26 @@ const Controls = () => {
           <div>Total: {gameSettings.setBSize}</div>
           <div>
             <Button
-              text={setChangeMarkers.IncreaseMarker}
+              text={SET_CHANGE_MARKERS.IncreaseMarker}
               action={() =>
-                updateOverallSetSize(setChangeMarkers.IncreaseMarker)
+                updateOverallSetSize(SET_CHANGE_MARKERS.IncreaseMarker)
               }
               classNames={["reddish-blue"]}
+              otherAttributes={{
+                "data-testid": CONTROLS_TEST_IDS.IncreaseSetSize,
+              }}
             />
           </div>
           <div>
             <Button
-              text={setChangeMarkers.DecreaseMarker}
+              text={SET_CHANGE_MARKERS.DecreaseMarker}
               action={() =>
-                updateOverallSetSize(setChangeMarkers.DecreaseMarker)
+                updateOverallSetSize(SET_CHANGE_MARKERS.DecreaseMarker)
               }
               classNames={["reddish-blue"]}
+              otherAttributes={{
+                "data-testid": CONTROLS_TEST_IDS.DecreaseSetSize,
+              }}
             />
           </div>
         </div>
