@@ -41,7 +41,6 @@ export const matchingsSlice = createSlice({
         );
         state.arrayOfMatches = [];
       }
-      // console.log(`YOFTI-LOGS: state before:\n${JSON.stringify(state)}`);
       let [itemA, itemB] = matching;
       // Flip the items if they appear in reverse...
       if (itemA.row) {
@@ -58,7 +57,6 @@ export const matchingsSlice = createSlice({
       const newArrayOfMatches = [...state.arrayOfMatches];
       newArrayOfMatches.push([itemA.index, itemB.index]);
       state.arrayOfMatches = [...newArrayOfMatches];
-      // console.log(`YOFTI-LOGS: state after:\n${JSON.stringify(state)}`);
     },
     clearAllMatchings: (state, action) => {
       if (state.setAMatches && state.setBMatches) {
