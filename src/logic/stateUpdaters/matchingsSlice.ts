@@ -41,7 +41,7 @@ export const matchingsSlice = createSlice({
         );
         state.arrayOfMatches = [];
       }
-      console.log(`YOFTI-LOGS: state before:\n${JSON.stringify(state)}`);
+      // console.log(`YOFTI-LOGS: state before:\n${JSON.stringify(state)}`);
       let [itemA, itemB] = matching;
       // Flip the items if they appear in reverse...
       if (itemA.row) {
@@ -58,7 +58,20 @@ export const matchingsSlice = createSlice({
       const newArrayOfMatches = [...state.arrayOfMatches];
       newArrayOfMatches.push([itemA.index, itemB.index]);
       state.arrayOfMatches = [...newArrayOfMatches];
-      console.log(`YOFTI-LOGS: state after:\n${JSON.stringify(state)}`);
+      // console.log(`YOFTI-LOGS: state after:\n${JSON.stringify(state)}`);
+    },
+    clearAllMatchings: (state, action) => {
+      if (state.setAMatches && state.setBMatches) {
+        const setASize = state.setAMatches.length;
+        const setBSize = state.setBMatches.length;
+        state.setAMatches = range(0, setASize).map(
+          (_index) => UNMATCHED_MARKER
+        );
+        state.setBMatches = range(0, setBSize).map(
+          (_index) => UNMATCHED_MARKER
+        );
+        state.arrayOfMatches = [];
+      }
     },
     removeMatching: (state, action) => {
       if (state.setAMatches && state.setBMatches) {
@@ -97,6 +110,6 @@ export const matchingsSlice = createSlice({
   },
 });
 
-export const { addMatching, removeMatching, unmatchBox } =
+export const { addMatching, clearAllMatchings, removeMatching, unmatchBox } =
   matchingsSlice.actions;
 export default matchingsSlice.reducer;

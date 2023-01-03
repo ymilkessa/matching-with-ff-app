@@ -27,6 +27,12 @@ const NumberRow = ({ row }: NumberRowArgs) => {
   const { selectedBox, cursorBox } = useSelector(
     (state: RootState) => state.markings
   );
+
+  // console.log(`YOFTI-LOGS: Sets\n${JSON.stringify({ setA, setB })}`);
+  // console.log(
+  //   `YOFTI-LOGS: Set Sizes\n${JSON.stringify({ setASize, setBSize })}`
+  // );
+
   // Add the cursorBox marker to the right NumberBox if in this set
   if (cursorBox.row === row && cursorBox.index < numberParams.length) {
     numberParams[cursorBox.index].boxTags?.push("number-box-passing");
@@ -41,6 +47,9 @@ const NumberRow = ({ row }: NumberRowArgs) => {
   }
   // Now add the unique colorings for the matchings...
   const { arrayOfMatches } = useSelector((state: RootState) => state.matchings);
+  // console.log(
+  //   `YOFTI-LOGS: Array of matches\n${JSON.stringify(arrayOfMatches)}`
+  // );
 
   for (let k = 0; k < arrayOfMatches.length; k++) {
     const matchedItemIndex = arrayOfMatches[k][row];

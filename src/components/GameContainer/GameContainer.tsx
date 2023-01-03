@@ -9,10 +9,6 @@ import { SET_NUMBERS } from "../../logic/constants";
 // import { generateSets } from "../../logic/gameLogic/arraySlice";
 
 const GameContainer = () => {
-  // const gameSettings = useSelector((state: RootState) => state.gameSettings);
-  // const dispatch = useDispatch();
-  // dispatch(generateSets(gameSettings));
-  // const { setA, setB } = useSelector((state: RootState) => state.sets);
   return (
     <div className="container-fluid Game-container fixed-width">
       <Controls />
