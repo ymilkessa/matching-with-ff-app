@@ -26,7 +26,10 @@ export const getListOfPaths = (graph: FlowGraph): number[][] => {
   // While partialPaths is not empty
   while (partialPaths.length) {
     // Pop out a path.
-    const nextPath = partialPaths.pop() ?? [];
+    const nextPath = partialPaths.pop();
+    if (!nextPath) {
+      throw Error("Error occured while enumerating paths in graph");
+    }
     // Get the last item in the path
     const lastVertex = nextPath.slice(-1)[0];
     // Fetch the nodes adjacent to this path AND which are not yet in the path.

@@ -71,7 +71,7 @@ export class MatchingWithFF {
       }
       loops += 1;
     }
-    // TODO: You should have a complete matching here...
+    // Note: You should have a complete matching here...
   }
 
   /**

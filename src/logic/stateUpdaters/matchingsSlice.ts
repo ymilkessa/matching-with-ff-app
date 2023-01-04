@@ -100,9 +100,6 @@ export const matchingsSlice = createSlice({
     unmatchBox: (state, action) => {
       if (state.setAMatches && state.setBMatches) {
         const boxToUnmatch = action.payload as BoxLocation;
-        console.log(
-          `YOFTI-LOGS: Box to unmatch\n${JSON.stringify(boxToUnmatch)}`
-        );
         // First unset the match from each set's matching's array
         if (boxToUnmatch.row === SET_NUMBERS.SET_A) {
           const matchIndex = state.setAMatches[boxToUnmatch.index];
@@ -127,9 +124,6 @@ export const matchingsSlice = createSlice({
      */
     unmatchBoxes: (state, action) => {
       const boxesToUnmatch = action.payload as BoxLocation[];
-      console.log(
-        `YOFTI-LOGS: Boxes to unmatch\n${JSON.stringify(boxesToUnmatch)}`
-      );
       if (!state.setAMatches || !state.setBMatches) {
         return;
       }
