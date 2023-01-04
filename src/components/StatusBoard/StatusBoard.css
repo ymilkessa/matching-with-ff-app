@@ -1,5 +1,7 @@
 .Status-board {
   width: 100%;
+  margin-top: 0.5vmax;
+  margin-bottom: 0.5vmax;
 }
 
 .inner-status-board {
@@ -8,7 +10,7 @@
   width: 95%;
   margin: auto;
   float: center;
-  height: 10vmax;
+  height: 7vmax;
   overflow-y: scroll;
   align-items: left;
 }

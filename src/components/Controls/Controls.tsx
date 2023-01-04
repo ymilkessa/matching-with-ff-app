@@ -8,11 +8,13 @@ import {
 } from "../../logic/stateUpdaters/gameSizeSlice";
 import "./Controls.css";
 import {
+  addSolution,
   clearAllMatchings,
   unmatchBoxes,
 } from "../../logic/stateUpdaters/matchingsSlice";
 import { range } from "lodash";
 import { BoxLocation } from "../NumberBox/types";
+import { matchCoprimesWithFF } from "../../ffSolver/solverInterface/interface";
 
 export enum SET_CHANGE_MARKERS {
   IncreaseMarker = "+",
@@ -49,7 +51,8 @@ const changeOverallSize = (
 
 const Controls = () => {
   const dispatch = useDispatch();
-  let gameSettings = useSelector((state: RootState) => state.gameSettings);
+  const gameSettings = useSelector((state: RootState) => state.gameSettings);
+  const arraySlice = useSelector((state: RootState) => state.sets);
 
   const startNewGame = (settings: GameSize) => {
     dispatch(clearAllMatchings(undefined));
@@ -79,13 +82,15 @@ const Controls = () => {
     const newSettings = changeSizeOfSetA(updateType, gameSettings);
     if (newSettings) {
       // First unmatch items beyond the new index to avoid errors
-      const removedBoxes = range(
-        newSettings.setASize,
-        gameSettings.setASize
-      ).map((index) => {
-        return { row: 0, index } as BoxLocation;
-      });
-      dispatch(unmatchBoxes(removedBoxes));
+      if (newSettings.setASize < gameSettings.setASize) {
+        const removedBoxes = range(
+          newSettings.setASize,
+          gameSettings.setASize
+        ).map((index) => {
+          return { row: 0, index } as BoxLocation;
+        });
+        dispatch(unmatchBoxes(removedBoxes));
+      }
       dispatch(changeNumberOfPairs(newSettings));
     }
   };
@@ -99,14 +104,28 @@ const Controls = () => {
     }
   };
 
+  const matchWithFF = () => {
+    const setA = arraySlice.setA.slice(0, gameSettings.setASize);
+    const setB = arraySlice.setB;
+    const solution = matchCoprimesWithFF({ setA, setB });
+    dispatch(addSolution(solution));
+  };
+
   return (
     <div className="Control-box">
-      <div className="left-button">
+      <div className="left-buttons">
         <div>
           <Button
             text="New Game"
             action={() => startNewGame(gameSettings)}
             classNames={["reddish-blue"]}
+          />
+        </div>
+        <div>
+          <Button
+            text="Run Auto Solver"
+            action={() => matchWithFF()}
+            classNames={["pale-orange"]}
           />
         </div>
       </div>

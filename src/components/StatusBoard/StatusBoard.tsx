@@ -18,6 +18,7 @@ import { numbersAreCoprime } from "../../logic/utils";
 // import { generateSets } from "../../logic/stateUpdaters/arraySlice";
 // import { GameSize } from "../../logic/stateUpdaters/gameSizeSlice";
 import { BoxLocation } from "../NumberBox/types";
+import { min } from "lodash";
 
 type SelectionSnapshot = {
   selection: BoxLocation | null;
@@ -124,19 +125,19 @@ const StatusBoard = () => {
   }
 
   let textToDisplay = [];
-  if (arrayOfMatches.length === setASize) {
+
+  for (let k = 0; k < arrayOfMatches.length; k++) {
+    const num1 = setA[arrayOfMatches[k][0]];
+    const num2 = setB[arrayOfMatches[k][1]];
+    textToDisplay.push(
+      <span>
+        {`${num1} --- ${num2}`}
+        <br />
+      </span>
+    );
+  }
+  if (arrayOfMatches.length === min([setASize, setBSize])) {
     textToDisplay.push(<h2>Done!</h2>);
-  } else {
-    for (let k = 0; k < arrayOfMatches.length; k++) {
-      const num1 = setA[arrayOfMatches[k][0]];
-      const num2 = setB[arrayOfMatches[k][1]];
-      textToDisplay.push(
-        <span>
-          {`${num1} --- ${num2}`}
-          <br />
-        </span>
-      );
-    }
   }
 
   return (

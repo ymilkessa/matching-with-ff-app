@@ -6,7 +6,7 @@ import "./NumberRow.css";
 import { NumberBoxArgs } from "../NumberBox/types";
 import { NumberRowArgs } from "./types";
 import { SET_NUMBERS } from "../../logic/constants";
-import { max } from "lodash";
+import { min } from "lodash";
 import { Coloring } from "../../logic/interfaceUtils/coloring";
 
 let coloringScheme: Coloring | null = null;
@@ -16,7 +16,7 @@ const NumberRow = ({ row }: NumberRowArgs) => {
   const { setASize, setBSize } = useSelector(
     (state: RootState) => state.gameSettings
   );
-  const gameSize = max([setASize, setBSize]) ?? setBSize; // (appeasing typescript here)
+  const gameSize = min([setASize, setBSize]) ?? setBSize; // (appeasing typescript here)
   if (!coloringScheme) {
     coloringScheme = new Coloring(gameSize);
   } else if (coloringScheme.getNumberOfOptions() !== gameSize) {
@@ -49,7 +49,12 @@ const NumberRow = ({ row }: NumberRowArgs) => {
   // Now add the unique colorings for the matchings...
   const { arrayOfMatches } = useSelector((state: RootState) => state.matchings);
 
-  console.log(`YOFTI-LOGS: ArrayOfMatches\n${JSON.stringify(arrayOfMatches)}`);
+  console.log(
+    `YOFTI-LOGS: Numbers\n${JSON.stringify(row === 0 ? setA : setB)}`
+  );
+  console.log(
+    `YOFTI-LOGS: Settings\n${JSON.stringify({ setASize, setBSize })}`
+  );
   for (let k = 0; k < arrayOfMatches.length; k++) {
     const matchedItemIndex = arrayOfMatches[k][row];
     numberParams[matchedItemIndex].matchColor =

@@ -1,11 +1,14 @@
 .Control-box {
   font-size: calc(10px + 1vmin);
   width: 100%;
+  margin-top: 1vmax;
+  margin-bottom: 0.5vmax;
 }
 
-.left-button {
+.left-buttons {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   float: left;
 }
 
@@ -14,7 +17,6 @@
   flex-direction: row;
   justify-content: space-evenly;
   background-color: rgb(53, 79, 145);
-  border-radius: 1.5vmax;
   float: right;
   min-width: 25vmin;
   max-width: 25vmax;

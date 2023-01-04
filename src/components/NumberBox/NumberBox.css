@@ -3,8 +3,8 @@
   font-size: calc(10px + 1.7vmin);
   padding: 1vmin;
   margin: 1vmin;
-  min-width: 6vmax;
-  min-height: 6vmax;
+  min-width: 4vmax;
+  min-height: 4vmax;
 }
 
 .number-box-neutral {
@@ -15,8 +15,8 @@
   border: solid whitesmoke 0.3vmax;
   font-size: calc(10px + 2.1vmin);
   font-weight: bold;
-  min-width: 6.5vmax;
-  min-height: 6.5vmax;
+  min-width: 5vmax;
+  min-height: 5vmax;
 }
 
 .number-box-temp-error {

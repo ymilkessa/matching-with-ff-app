@@ -58,6 +58,19 @@ export const matchingsSlice = createSlice({
       newArrayOfMatches.push([itemA.index, itemB.index]);
       state.arrayOfMatches = [...newArrayOfMatches];
     },
+    /**
+     * Directly add the given matchings to the state, over-writing any matchings
+     * that exist before.
+     */
+    addSolution: (state, action) => {
+      const { setAMatches, setBMatches, arrayOfMatches } =
+        action.payload as MatchingRecords;
+      if (setAMatches && setBMatches) {
+        state.setAMatches = [...setAMatches];
+        state.setBMatches = [...setBMatches];
+        state.arrayOfMatches = [...arrayOfMatches];
+      }
+    },
     clearAllMatchings: (state, action) => {
       if (state.setAMatches && state.setBMatches) {
         const setASize = state.setAMatches.length;
@@ -144,6 +157,7 @@ export const matchingsSlice = createSlice({
 
 export const {
   addMatching,
+  addSolution,
   clearAllMatchings,
   removeMatching,
   unmatchBox,
