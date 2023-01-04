@@ -8,8 +8,10 @@ export class Coloring {
 
   constructor(
     numOfOptions: number,
-    colorA: number[] = [32, 144, 160],
-    colorB: number[] = [32, 120, 255]
+    // colorA: number[] = [32, 144, 160],
+    // colorB: number[] = [32, 120, 255]
+    colorA: number[] = [160, 220, 32],
+    colorB: number[] = [220, 160, 32]
   ) {
     this.colorA = colorA;
     this.colorB = colorB;
@@ -21,6 +23,13 @@ export class Coloring {
       );
     }
     this.numOfOptions = numOfOptions;
+  }
+
+  /**
+   * Return how many options are in this coloring scheme
+   */
+  public getNumberOfOptions(): number {
+    return this.numOfOptions;
   }
 
   /**

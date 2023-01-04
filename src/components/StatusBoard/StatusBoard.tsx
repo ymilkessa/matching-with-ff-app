@@ -9,14 +9,14 @@ import {
 import {
   UNMATCHED_MARKER,
   addMatching,
-  clearAllMatchings,
+  // clearAllMatchings,
   unmatchBox,
 } from "../../logic/stateUpdaters/matchingsSlice";
 import { SET_NUMBERS } from "../../logic/constants";
 import { numbersAreCoprime } from "../../logic/utils";
-import { min } from "lodash";
-import { generateSets } from "../../logic/stateUpdaters/arraySlice";
-import { GameSize } from "../../logic/stateUpdaters/gameSizeSlice";
+// import { min } from "lodash";
+// import { generateSets } from "../../logic/stateUpdaters/arraySlice";
+// import { GameSize } from "../../logic/stateUpdaters/gameSizeSlice";
 import { BoxLocation } from "../NumberBox/types";
 
 type SelectionSnapshot = {
@@ -67,7 +67,7 @@ const StatusBoard = () => {
     relevantMatchesOfPrevBox?.length &&
     matchOfPrevBox !== UNMATCHED_MARKER;
 
-  // Now decide if this selection is a matching operation or not
+  // Check if there is a new selection and decide what type it is
   if (selection && selectionSnapshot.selectionTime !== selectionTime) {
     const partialSelection = { selection, selectionTime, newSelection: true };
     let currentlyMatching = false;
@@ -84,11 +84,14 @@ const StatusBoard = () => {
       currentlyMatching,
     };
   } else if (selectionSnapshot.newSelection) {
+    // If no new selection, but the old flat is still true, make it false
     selectionSnapshot = { ...selectionSnapshot, newSelection: false };
   }
 
   // First move the cursor to where the current selction is
-  selection && dispatch(moveCursorMarker(selection));
+  if (selection && selectionSnapshot.newSelection) {
+    dispatch(moveCursorMarker(selection));
+  }
 
   if (selection === null) {
     // (0) Nothing to do here. Just re-render.
@@ -104,21 +107,13 @@ const StatusBoard = () => {
       setsInOrder[previousSelection.row][previousSelection.index];
     const currentNum = setsInOrder[selection.row][selection.index];
     if (numbersAreCoprime(previousNum, currentNum)) {
-      // If this is the last match, just reset the game.
-      if (arrayOfMatches.length + 1 === min([setASize, setBSize])) {
-        // Reset the game.
-        dispatch(generateSets({ setASize, setBSize } as GameSize));
-        dispatch(clearAllMatchings(undefined));
-        dispatch(addSelectionMarker(selection));
-      } else {
-        dispatch(
-          addMatching({
-            matching: [previousSelection, selection],
-            setASize: setA.length,
-            setBSize: setB.length,
-          })
-        );
-      }
+      dispatch(
+        addMatching({
+          matching: [previousSelection, selection],
+          setASize: setA.length,
+          setBSize: setB.length,
+        })
+      );
     } else {
       dispatch(addErrorMarksFromObjects([previousSelection, selection]));
       setTimeout(() => dispatch(addSelectionMarker(selection)), 1000);
@@ -128,25 +123,25 @@ const StatusBoard = () => {
     dispatch(addSelectionMarker(selection));
   }
 
+  let textToDisplay = [];
+  if (arrayOfMatches.length === setASize) {
+    textToDisplay.push(<h2>Done!</h2>);
+  } else {
+    for (let k = 0; k < arrayOfMatches.length; k++) {
+      const num1 = setA[arrayOfMatches[k][0]];
+      const num2 = setB[arrayOfMatches[k][1]];
+      textToDisplay.push(
+        <span>
+          {`${num1} --- ${num2}`}
+          <br />
+        </span>
+      );
+    }
+  }
+
   return (
     <div className="Status-board">
-      <div className="inner-status-board">
-        {selection ? (
-          <div className="current-selection">
-            Current Selection: Index {selection.index}, row {selection.row}
-          </div>
-        ) : (
-          ""
-        )}
-        {previousSelection ? (
-          <div className="previous-selection">
-            Last selection: Index {previousSelection.index}, row{" "}
-            {previousSelection.row}
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
+      <div className="inner-status-board">{textToDisplay}</div>
     </div>
   );
 };

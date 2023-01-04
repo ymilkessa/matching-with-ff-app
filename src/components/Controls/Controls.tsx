@@ -7,6 +7,12 @@ import {
   changeNumberOfPairs,
 } from "../../logic/stateUpdaters/gameSizeSlice";
 import "./Controls.css";
+import {
+  clearAllMatchings,
+  unmatchBoxes,
+} from "../../logic/stateUpdaters/matchingsSlice";
+import { range } from "lodash";
+import { BoxLocation } from "../NumberBox/types";
 
 export enum SET_CHANGE_MARKERS {
   IncreaseMarker = "+",
@@ -19,26 +25,6 @@ export enum CONTROLS_TEST_IDS {
   IncreaseSetSize = "inc-set-size",
   DecreaseSetSize = "dec-set-size",
 }
-
-const changeSizeOfSetA = (
-  updateType: SET_CHANGE_MARKERS,
-  currentSettings: GameSize
-): GameSize | undefined => {
-  const newSettings = { ...currentSettings };
-  if (updateType === SET_CHANGE_MARKERS.IncreaseMarker) {
-    if (currentSettings.setASize < currentSettings.setBSize) {
-      newSettings.setASize += 1;
-    }
-  } else if (updateType === SET_CHANGE_MARKERS.DecreaseMarker) {
-    if (currentSettings.setASize > 1) {
-      newSettings.setASize -= 1;
-    }
-  }
-  // Make the dispatch only if a change in settings is possible
-  if (newSettings.setASize !== currentSettings.setASize) {
-    return newSettings;
-  }
-};
 
 const changeOverallSize = (
   updateType: SET_CHANGE_MARKERS,
@@ -65,10 +51,42 @@ const Controls = () => {
   const dispatch = useDispatch();
   let gameSettings = useSelector((state: RootState) => state.gameSettings);
 
+  const startNewGame = (settings: GameSize) => {
+    dispatch(clearAllMatchings(undefined));
+    dispatch(generateSets(settings));
+  };
+  const changeSizeOfSetA = (
+    updateType: SET_CHANGE_MARKERS,
+    currentSettings: GameSize
+  ): GameSize | undefined => {
+    const newSettings = { ...currentSettings };
+    if (updateType === SET_CHANGE_MARKERS.IncreaseMarker) {
+      if (currentSettings.setASize < currentSettings.setBSize) {
+        newSettings.setASize += 1;
+      }
+    } else if (updateType === SET_CHANGE_MARKERS.DecreaseMarker) {
+      if (currentSettings.setASize > 1) {
+        newSettings.setASize -= 1;
+      }
+    }
+    // Make the dispatch only if a change in settings is possible
+    if (newSettings.setASize !== currentSettings.setASize) {
+      return newSettings;
+    }
+  };
+
   const updateNumberOfPairs = (updateType: SET_CHANGE_MARKERS) => {
     const newSettings = changeSizeOfSetA(updateType, gameSettings);
     if (newSettings) {
-      return dispatch(changeNumberOfPairs(newSettings));
+      // First unmatch items beyond the new index to avoid errors
+      const removedBoxes = range(
+        newSettings.setASize,
+        gameSettings.setASize
+      ).map((index) => {
+        return { row: 0, index } as BoxLocation;
+      });
+      dispatch(unmatchBoxes(removedBoxes));
+      dispatch(changeNumberOfPairs(newSettings));
     }
   };
 
@@ -77,7 +95,7 @@ const Controls = () => {
     if (newSettings) {
       dispatch(changeNumberOfPairs(newSettings));
       // Now create new set of numbers
-      return dispatch(generateSets(newSettings));
+      startNewGame(newSettings);
     }
   };
 
@@ -87,7 +105,7 @@ const Controls = () => {
         <div>
           <Button
             text="New Game"
-            action={() => dispatch(generateSets(gameSettings))}
+            action={() => startNewGame(gameSettings)}
             classNames={["reddish-blue"]}
           />
         </div>

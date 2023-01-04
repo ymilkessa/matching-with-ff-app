@@ -8,4 +8,7 @@
   width: 95%;
   margin: auto;
   float: center;
+  height: 10vmax;
+  overflow-y: scroll;
+  align-items: left;
 }

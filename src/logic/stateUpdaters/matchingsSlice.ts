@@ -87,7 +87,41 @@ export const matchingsSlice = createSlice({
     unmatchBox: (state, action) => {
       if (state.setAMatches && state.setBMatches) {
         const boxToUnmatch = action.payload as BoxLocation;
+        console.log(
+          `YOFTI-LOGS: Box to unmatch\n${JSON.stringify(boxToUnmatch)}`
+        );
         // First unset the match from each set's matching's array
+        if (boxToUnmatch.row === SET_NUMBERS.SET_A) {
+          const matchIndex = state.setAMatches[boxToUnmatch.index];
+          if (matchIndex === UNMATCHED_MARKER) return;
+          state.setBMatches[matchIndex] = UNMATCHED_MARKER;
+          state.setAMatches[boxToUnmatch.index] = UNMATCHED_MARKER;
+        } else {
+          const matchIndex = state.setBMatches[boxToUnmatch.index];
+          if (matchIndex === UNMATCHED_MARKER) return;
+          state.setAMatches[matchIndex] = UNMATCHED_MARKER;
+          state.setBMatches[boxToUnmatch.index] = UNMATCHED_MARKER;
+        }
+        // Then remove the tuple entry from the "array of matching tuples"
+        state.arrayOfMatches = state.arrayOfMatches.filter((match) => {
+          return match[boxToUnmatch.row] !== boxToUnmatch.index;
+        });
+      }
+    },
+    /**
+     * Unmatches each box in a list of BoxLocation objects
+     * For some reason, it doesn't work when I call the previous reducer here.
+     */
+    unmatchBoxes: (state, action) => {
+      const boxesToUnmatch = action.payload as BoxLocation[];
+      console.log(
+        `YOFTI-LOGS: Boxes to unmatch\n${JSON.stringify(boxesToUnmatch)}`
+      );
+      if (!state.setAMatches || !state.setBMatches) {
+        return;
+      }
+      for (let k = 0; k < boxesToUnmatch.length; k++) {
+        const boxToUnmatch = boxesToUnmatch[k];
         if (boxToUnmatch.row === SET_NUMBERS.SET_A) {
           const matchIndex = state.setAMatches[boxToUnmatch.index];
           if (matchIndex === UNMATCHED_MARKER) return;
@@ -108,6 +142,11 @@ export const matchingsSlice = createSlice({
   },
 });
 
-export const { addMatching, clearAllMatchings, removeMatching, unmatchBox } =
-  matchingsSlice.actions;
+export const {
+  addMatching,
+  clearAllMatchings,
+  removeMatching,
+  unmatchBox,
+  unmatchBoxes,
+} = matchingsSlice.actions;
 export default matchingsSlice.reducer;
