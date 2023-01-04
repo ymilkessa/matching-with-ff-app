@@ -1,17 +1,69 @@
 import { ArraySlice } from "../../logic/stateUpdaters/arraySlice";
-import { BipartiteGraph } from "../src/matchingWithFF";
+import { BipartiteGraph, MatchingWithFF } from "../src/matchingWithFF";
 import { SingleAdjacencyList } from "../src/utils";
 import { numbersAreCoprime } from "../../logic/utils";
-import { concat } from "lodash";
+import { concat, range } from "lodash";
+import {
+  Matching,
+  MatchingRecords,
+  UNMATCHED_MARKER,
+} from "../../logic/stateUpdaters/matchingsSlice";
+
+/**
+ * Returns a vaid coprime matching of sets provided in the
+ * ArraySlice object using the ford-fulkerson matcher
+ */
+export function matchCoprimesWithFF(arraySlice: ArraySlice): MatchingRecords {
+  const bipartiteGraph = createGraphFromNumberSets(arraySlice);
+  const ffMatcher = new MatchingWithFF(bipartiteGraph);
+  const matchings = ffMatcher.execute();
+  const offSetA = 1;
+  const offSetB = arraySlice.setA.length + 1;
+  const finalIndex = offSetB + arraySlice.setB.length;
+  const filteredMatchings = matchings.filter(
+    (pair) => pair[0] > 0 && pair[1] < finalIndex
+  );
+  const normalizedMatchings = filteredMatchings.map(
+    (pair) => [pair[0] - offSetA, pair[1] - offSetB] as Matching
+  );
+  return getMatchingRecordFromMatching(
+    normalizedMatchings,
+    arraySlice.setA.length,
+    arraySlice.setB.length
+  );
+}
+
+/**
+ * Create a matching record using the given matching in order
+ * to match the data format of the matchingSlice state
+ */
+function getMatchingRecordFromMatching(
+  matches: Matching[],
+  setALength: number,
+  setBLength: number
+): MatchingRecords {
+  const setAMatches = range(0, setALength).map((_num) => UNMATCHED_MARKER);
+  const setBMatches = range(0, setBLength).map((_num) => UNMATCHED_MARKER);
+  for (let k = 0; k < matches.length; k++) {
+    const [inA, inB] = matches[k];
+    setAMatches[inA] = inB;
+    setBMatches[inB] = inA;
+  }
+  return {
+    setAMatches,
+    setBMatches,
+    arrayOfMatches: matches,
+  };
+}
 
 /**
  * Generates a bipartite flow graph using the two sets of
  * numbers in an ArraySlice object, placing an edge between
  * each pair of coprime numbers.
  */
-export const createGraphFromNumberSets = (
+export function createGraphFromNumberSets(
   arraySlice: ArraySlice
-): BipartiteGraph => {
+): BipartiteGraph {
   const { setA, setB } = arraySlice;
 
   // The lists of the respective indices for the number sets
@@ -58,4 +110,4 @@ export const createGraphFromNumberSets = (
     setA: setAIndices,
     setB: setBIndices,
   };
-};
+}
