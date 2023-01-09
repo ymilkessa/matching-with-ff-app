@@ -51,6 +51,8 @@ const NumberRow = ({ row }: NumberRowArgs) => {
 
   for (let k = 0; k < arrayOfMatches.length; k++) {
     const matchedItemIndex = arrayOfMatches[k][row];
+    if (!numberParams[matchedItemIndex]) {
+    }
     numberParams[matchedItemIndex].matchColor =
       coloringScheme.selectColoring(k);
   }

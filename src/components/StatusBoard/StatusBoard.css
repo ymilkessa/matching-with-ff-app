@@ -6,11 +6,27 @@
 
 .inner-status-board {
   background-color: rgb(34, 104, 139);
-  /* border-radius: 1.8vmax; */
-  width: 95%;
-  margin: auto;
-  float: center;
   height: 7vmax;
   overflow-y: scroll;
-  align-items: left;
+  display: flex;
+  justify-content: center;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.nugget-container {
+  float: center;
+  width: 95%;
+  justify-content: space-around;
+}
+
+.matching-progress {
+  display: inline;
+  padding: 0 1vmax 0 1vmax;
+  margin: 0.5vmax 0.5vmax 0.5vmax 0.5vmax;
+}
+
+.matching-complete {
+  background-color: rgb(139, 82, 7);
+  border-radius: 0.5vmin;
 }

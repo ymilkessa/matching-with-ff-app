@@ -11,7 +11,7 @@ interface ButtonArgs {
 const Button = ({
   text,
   action,
-  classNames = ["default"],
+  classNames = ["default", "default-size"],
   otherAttributes = {},
 }: ButtonArgs) => {
   const classNamesList = ["common-properties", ...classNames];

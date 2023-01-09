@@ -15,6 +15,12 @@ import {
 import { range } from "lodash";
 import { BoxLocation } from "../NumberBox/types";
 import { matchCoprimesWithFF } from "../../ffSolver/solverInterface/interface";
+import { turnOffAutoSolver } from "../../logic/stateUpdaters/autoSolverStatus";
+import {
+  showAutoSolverMessage,
+  showNoGuideMessage,
+} from "../../logic/stateUpdaters/guideMessages";
+import { useEffect, useState } from "react";
 
 export enum SET_CHANGE_MARKERS {
   IncreaseMarker = "+",
@@ -52,7 +58,9 @@ const changeOverallSize = (
 const Controls = () => {
   const dispatch = useDispatch();
   const gameSettings = useSelector((state: RootState) => state.gameSettings);
-  const arraySlice = useSelector((state: RootState) => state.sets);
+  const { value: runAutoSolver } = useSelector(
+    (state: RootState) => state.autoSolverStatus
+  );
 
   const startNewGame = (settings: GameSize) => {
     dispatch(clearAllMatchings(undefined));
@@ -104,12 +112,37 @@ const Controls = () => {
     }
   };
 
+  /**
+   * This causes the StatusBoard to display an "auto solver running"
+   * message. The associated state changes in the StatusBoard should
+   * then trigger the autosolver to be run here.
+   */
   const matchWithFF = () => {
-    const setA = arraySlice.setA.slice(0, gameSettings.setASize);
-    const setB = arraySlice.setB;
-    const solution = matchCoprimesWithFF({ setA, setB });
-    dispatch(addSolution(solution));
+    dispatch(showAutoSolverMessage(undefined));
   };
+
+  /**
+   * If the autoSolver flag has been set, solve the matching problem
+   * here and then unset the flag. Also remove the guide message
+   */
+  const defaultAutoSolvePrompt = "Run Auto Solver";
+  const [autoRunButtonText, changeAutoRunPrompt] = useState(
+    defaultAutoSolvePrompt
+  );
+  const arraySlice = useSelector((state: RootState) => state.sets);
+  useEffect(() => {
+    if (runAutoSolver) {
+      setTimeout(() => {
+        const setA = arraySlice.setA.slice(0, gameSettings.setASize);
+        const setB = arraySlice.setB;
+        const solution = matchCoprimesWithFF({ setA, setB });
+        dispatch(addSolution(solution));
+        dispatch(showNoGuideMessage(undefined));
+        dispatch(turnOffAutoSolver(undefined));
+        changeAutoRunPrompt(defaultAutoSolvePrompt);
+      }, 100);
+    }
+  }, [runAutoSolver, dispatch, gameSettings, arraySlice]);
 
   return (
     <div className="Control-box">
@@ -118,14 +151,14 @@ const Controls = () => {
           <Button
             text="New Game"
             action={() => startNewGame(gameSettings)}
-            classNames={["reddish-blue"]}
+            classNames={["reddish-blue", "regular-size"]}
           />
         </div>
         <div>
           <Button
-            text="Run Auto Solver"
+            text={autoRunButtonText}
             action={() => matchWithFF()}
-            classNames={["pale-orange"]}
+            classNames={["pale-orange", "regular-size"]}
           />
         </div>
       </div>
@@ -141,7 +174,7 @@ const Controls = () => {
               action={() =>
                 updateNumberOfPairs(SET_CHANGE_MARKERS.IncreaseMarker)
               }
-              classNames={["default"]}
+              classNames={["regular", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.IncreaseRatio,
               }}
@@ -153,7 +186,7 @@ const Controls = () => {
               action={() =>
                 updateNumberOfPairs(SET_CHANGE_MARKERS.DecreaseMarker)
               }
-              classNames={["default"]}
+              classNames={["regular", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.DecreaseRatio,
               }}
@@ -168,7 +201,7 @@ const Controls = () => {
               action={() =>
                 updateOverallSetSize(SET_CHANGE_MARKERS.IncreaseMarker)
               }
-              classNames={["reddish-blue"]}
+              classNames={["reddish-blue", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.IncreaseSetSize,
               }}
@@ -180,7 +213,7 @@ const Controls = () => {
               action={() =>
                 updateOverallSetSize(SET_CHANGE_MARKERS.DecreaseMarker)
               }
-              classNames={["reddish-blue"]}
+              classNames={["reddish-blue", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.DecreaseSetSize,
               }}

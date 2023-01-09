@@ -1,16 +1,28 @@
 .common-properties {
   color: black;
   font-family: "Courier New", Courier, monospace;
-  font-size: calc(10px + 1vmin);
   font-weight: bold;
+}
+
+.regular {
+  background-color: lightblue;
+}
+
+.regular-size {
+  font-size: calc(10px + 1vmin);
   padding: 1vmax;
   margin: 1vmax;
   border-radius: 0.7vmax;
   min-width: 5vmax;
 }
 
-.default {
-  background-color: lightblue;
+.small-size {
+  font-size: calc(10px + 1vmin);
+  padding: 0.1vmax;
+  margin: 0.6vmax;
+  border-radius: 0.2vmax;
+  min-width: 3vmax;
+  min-height: 3vmax;
 }
 
 .pale-orange {
