@@ -1,25 +1,25 @@
 @media (min-aspect-ratio: 7/5) {
   /* fix for very wide screens */
   .fixed-width {
-    width: 126vh;
+    width: 98vh;
   }
 }
 
 @media (max-aspect-ratio: 7/5) {
   /* expand proportionally for wide screens */
   .fixed-width {
-    width: 90vw;
+    width: 70vw;
   }
 }
 
 @media (max-aspect-ratio: 1/1) {
   /* Fix for narrowing screens */
   .fixed-width {
-    width: 90vh;
+    width: 70vh;
   }
 }
 
-@media (max-aspect-ratio: 9/10) {
+@media (max-aspect-ratio: 7/10) {
   /* Shrink proportionally if screen narrower than a 10:9 height to width */
   .fixed-width {
     width: 100vw;

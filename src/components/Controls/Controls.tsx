@@ -7,6 +7,20 @@ import {
   changeNumberOfPairs,
 } from "../../logic/stateUpdaters/gameSizeSlice";
 import "./Controls.css";
+import {
+  addSolution,
+  clearAllMatchings,
+  unmatchBoxes,
+} from "../../logic/stateUpdaters/matchingsSlice";
+import { range } from "lodash";
+import { BoxLocation } from "../NumberBox/types";
+import { matchCoprimesWithFF } from "../../ffSolver/solverInterface/interface";
+import { turnOffAutoSolver } from "../../logic/stateUpdaters/autoSolverStatus";
+import {
+  showAutoSolverMessage,
+  showNoGuideMessage,
+} from "../../logic/stateUpdaters/guideMessages";
+import { useEffect, useState } from "react";
 
 export enum SET_CHANGE_MARKERS {
   IncreaseMarker = "+",
@@ -19,26 +33,6 @@ export enum CONTROLS_TEST_IDS {
   IncreaseSetSize = "inc-set-size",
   DecreaseSetSize = "dec-set-size",
 }
-
-const changeSizeOfSetA = (
-  updateType: SET_CHANGE_MARKERS,
-  currentSettings: GameSize
-): GameSize | undefined => {
-  const newSettings = { ...currentSettings };
-  if (updateType === SET_CHANGE_MARKERS.IncreaseMarker) {
-    if (currentSettings.setASize < currentSettings.setBSize) {
-      newSettings.setASize += 1;
-    }
-  } else if (updateType === SET_CHANGE_MARKERS.DecreaseMarker) {
-    if (currentSettings.setASize > 1) {
-      newSettings.setASize -= 1;
-    }
-  }
-  // Make the dispatch only if a change in settings is possible
-  if (newSettings.setASize !== currentSettings.setASize) {
-    return newSettings;
-  }
-};
 
 const changeOverallSize = (
   updateType: SET_CHANGE_MARKERS,
@@ -63,12 +57,49 @@ const changeOverallSize = (
 
 const Controls = () => {
   const dispatch = useDispatch();
-  let gameSettings = useSelector((state: RootState) => state.gameSettings);
+  const gameSettings = useSelector((state: RootState) => state.gameSettings);
+  const { value: runAutoSolver } = useSelector(
+    (state: RootState) => state.autoSolverStatus
+  );
+
+  const startNewGame = (settings: GameSize) => {
+    dispatch(clearAllMatchings(undefined));
+    dispatch(generateSets(settings));
+  };
+  const changeSizeOfSetA = (
+    updateType: SET_CHANGE_MARKERS,
+    currentSettings: GameSize
+  ): GameSize | undefined => {
+    const newSettings = { ...currentSettings };
+    if (updateType === SET_CHANGE_MARKERS.IncreaseMarker) {
+      if (currentSettings.setASize < currentSettings.setBSize) {
+        newSettings.setASize += 1;
+      }
+    } else if (updateType === SET_CHANGE_MARKERS.DecreaseMarker) {
+      if (currentSettings.setASize > 1) {
+        newSettings.setASize -= 1;
+      }
+    }
+    // Make the dispatch only if a change in settings is possible
+    if (newSettings.setASize !== currentSettings.setASize) {
+      return newSettings;
+    }
+  };
 
   const updateNumberOfPairs = (updateType: SET_CHANGE_MARKERS) => {
     const newSettings = changeSizeOfSetA(updateType, gameSettings);
     if (newSettings) {
-      return dispatch(changeNumberOfPairs(newSettings));
+      // First unmatch items beyond the new index to avoid errors
+      if (newSettings.setASize < gameSettings.setASize) {
+        const removedBoxes = range(
+          newSettings.setASize,
+          gameSettings.setASize
+        ).map((index) => {
+          return { row: 0, index } as BoxLocation;
+        });
+        dispatch(unmatchBoxes(removedBoxes));
+      }
+      dispatch(changeNumberOfPairs(newSettings));
     }
   };
 
@@ -77,18 +108,57 @@ const Controls = () => {
     if (newSettings) {
       dispatch(changeNumberOfPairs(newSettings));
       // Now create new set of numbers
-      return dispatch(generateSets(newSettings));
+      startNewGame(newSettings);
     }
   };
 
+  /**
+   * This causes the StatusBoard to display an "auto solver running"
+   * message. The associated state changes in the StatusBoard should
+   * then trigger the autosolver to be run here.
+   */
+  const matchWithFF = () => {
+    dispatch(showAutoSolverMessage(undefined));
+  };
+
+  /**
+   * If the autoSolver flag has been set, solve the matching problem
+   * here and then unset the flag. Also remove the guide message
+   */
+  const defaultAutoSolvePrompt = "Run Auto Solver";
+  const [autoRunButtonText, changeAutoRunPrompt] = useState(
+    defaultAutoSolvePrompt
+  );
+  const arraySlice = useSelector((state: RootState) => state.sets);
+  useEffect(() => {
+    if (runAutoSolver) {
+      setTimeout(() => {
+        const setA = arraySlice.setA.slice(0, gameSettings.setASize);
+        const setB = arraySlice.setB;
+        const solution = matchCoprimesWithFF({ setA, setB });
+        dispatch(addSolution(solution));
+        dispatch(showNoGuideMessage(undefined));
+        dispatch(turnOffAutoSolver(undefined));
+        changeAutoRunPrompt(defaultAutoSolvePrompt);
+      }, 100);
+    }
+  }, [runAutoSolver, dispatch, gameSettings, arraySlice]);
+
   return (
     <div className="Control-box">
-      <div className="left-button">
+      <div className="left-buttons">
         <div>
           <Button
             text="New Game"
-            action={() => dispatch(generateSets(gameSettings))}
-            classNames={["reddish-blue"]}
+            action={() => startNewGame(gameSettings)}
+            classNames={["reddish-blue", "regular-size"]}
+          />
+        </div>
+        <div>
+          <Button
+            text={autoRunButtonText}
+            action={() => matchWithFF()}
+            classNames={["pale-orange", "regular-size"]}
           />
         </div>
       </div>
@@ -104,7 +174,7 @@ const Controls = () => {
               action={() =>
                 updateNumberOfPairs(SET_CHANGE_MARKERS.IncreaseMarker)
               }
-              classNames={["default"]}
+              classNames={["regular", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.IncreaseRatio,
               }}
@@ -116,7 +186,7 @@ const Controls = () => {
               action={() =>
                 updateNumberOfPairs(SET_CHANGE_MARKERS.DecreaseMarker)
               }
-              classNames={["default"]}
+              classNames={["regular", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.DecreaseRatio,
               }}
@@ -131,7 +201,7 @@ const Controls = () => {
               action={() =>
                 updateOverallSetSize(SET_CHANGE_MARKERS.IncreaseMarker)
               }
-              classNames={["reddish-blue"]}
+              classNames={["reddish-blue", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.IncreaseSetSize,
               }}
@@ -143,7 +213,7 @@ const Controls = () => {
               action={() =>
                 updateOverallSetSize(SET_CHANGE_MARKERS.DecreaseMarker)
               }
-              classNames={["reddish-blue"]}
+              classNames={["reddish-blue", "small-size"]}
               otherAttributes={{
                 "data-testid": CONTROLS_TEST_IDS.DecreaseSetSize,
               }}

@@ -8,6 +8,8 @@ import gameSizeReducer from "./stateUpdaters/gameSizeSlice";
 import markingsReducer from "./stateUpdaters/markingsSlice";
 import matchingsReducer from "./stateUpdaters/matchingsSlice";
 import selectionReducer from "./stateUpdaters/selectionSlice";
+import autoSolverStatusReducer from "./stateUpdaters/autoSolverStatus";
+import guideMessageReducer from "./stateUpdaters/guideMessages";
 
 const rootReducer = combineReducers({
   sets: arrayReducer,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   markings: markingsReducer,
   matchings: matchingsReducer,
   virtualSelection: selectionReducer,
+  autoSolverStatus: autoSolverStatusReducer,
+  guideMessage: guideMessageReducer,
 });
 
 export const store = configureStore({

@@ -6,8 +6,8 @@ export interface GameSize {
 }
 
 const initialSize: GameSize = {
-  setASize: 9,
-  setBSize: 9,
+  setASize: 5,
+  setBSize: 8,
 };
 
 export const gameSizeSlice = createSlice({

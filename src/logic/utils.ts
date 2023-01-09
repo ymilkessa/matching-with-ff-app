@@ -85,20 +85,15 @@ export const generateShuffledCoprimePairs = (
  */
 export const numbersAreCoprime = (numA: number, numB: number) => {
   const minNum = Math.min(numA, numB);
-  const sqrtMin = Math.sqrt(minNum);
-  // First check the primes less than the sqrtMin
+  // Check the prime number that are up to minNum
   for (let i = 0; i < LIST_OF_PRIMES.length; i++) {
     const primeNum = LIST_OF_PRIMES[i];
-    if (primeNum > sqrtMin) {
+    if (primeNum > minNum) {
       break;
     }
     if (numA % primeNum === 0 && numB % primeNum === 0) {
       return false;
     }
-  }
-  // Then check the minNum itself.
-  if (numA % minNum === 0 && numB % minNum === 0) {
-    return false;
   }
   return true;
 };

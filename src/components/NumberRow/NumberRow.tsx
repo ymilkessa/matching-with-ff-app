@@ -6,16 +6,22 @@ import "./NumberRow.css";
 import { NumberBoxArgs } from "../NumberBox/types";
 import { NumberRowArgs } from "./types";
 import { SET_NUMBERS } from "../../logic/constants";
-import { max } from "lodash";
+import { min } from "lodash";
 import { Coloring } from "../../logic/interfaceUtils/coloring";
+
+let coloringScheme: Coloring | null = null;
 
 const NumberRow = ({ row }: NumberRowArgs) => {
   const { setA, setB } = useSelector((state: RootState) => state.sets);
   const { setASize, setBSize } = useSelector(
     (state: RootState) => state.gameSettings
   );
-  const gameSize = max([setASize, setBSize]) ?? setBSize; // (appeasing typescript here)
-  const coloringScheme = new Coloring(gameSize);
+  const gameSize = min([setASize, setBSize]) ?? setBSize; // (appeasing typescript here)
+  if (!coloringScheme) {
+    coloringScheme = new Coloring(gameSize);
+  } else if (coloringScheme.getNumberOfOptions() !== gameSize) {
+    coloringScheme = new Coloring(gameSize);
+  }
   const numbers = row === SET_NUMBERS.SET_A ? setA : setB;
   const setSize = row === SET_NUMBERS.SET_A ? setASize : setBSize;
   const numbersToDisplay = numbers.slice(0, setSize);
@@ -45,6 +51,8 @@ const NumberRow = ({ row }: NumberRowArgs) => {
 
   for (let k = 0; k < arrayOfMatches.length; k++) {
     const matchedItemIndex = arrayOfMatches[k][row];
+    if (!numberParams[matchedItemIndex]) {
+    }
     numberParams[matchedItemIndex].matchColor =
       coloringScheme.selectColoring(k);
   }

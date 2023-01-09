@@ -8,19 +8,33 @@ export class Coloring {
 
   constructor(
     numOfOptions: number,
-    colorA: number[] = [32, 144, 160],
-    colorB: number[] = [32, 120, 255]
+    // colorA: number[] = [32, 144, 160],
+    // colorB: number[] = [32, 120, 255]
+    colorA: number[] = [160, 220, 32],
+    colorB: number[] = [250, 160, 32]
   ) {
     this.colorA = colorA;
     this.colorB = colorB;
 
     this.colorDelta = [];
-    for (let i = 0; i < 3; i++) {
-      this.colorDelta.push(
-        floor((this.colorB[i] - this.colorA[i]) / numOfOptions)
-      );
+    if (numOfOptions > 1) {
+      const numOfGaps = numOfOptions - 1;
+      for (let i = 0; i < 3; i++) {
+        this.colorDelta.push(
+          floor((this.colorB[i] - this.colorA[i]) / numOfGaps)
+        );
+      }
+    } else {
+      this.colorDelta = [0, 0, 0];
     }
     this.numOfOptions = numOfOptions;
+  }
+
+  /**
+   * Return how many options are in this coloring scheme
+   */
+  public getNumberOfOptions(): number {
+    return this.numOfOptions;
   }
 
   /**
