@@ -132,6 +132,7 @@ const Controls = () => {
   const arraySlice = useSelector((state: RootState) => state.sets);
   useEffect(() => {
     if (runAutoSolver) {
+      changeAutoRunPrompt("Running solver...");
       setTimeout(() => {
         const setA = arraySlice.setA.slice(0, gameSettings.setASize);
         const setB = arraySlice.setB;
